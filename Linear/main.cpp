@@ -5,6 +5,7 @@ int main()
 {
     // SeqList Test
     {
+        std::cout << "===============SeqList Test===============" << std::endl;
         SeqList seqlist(3);
         std::cout << seqlist.Empty() << std::endl;
         seqlist.Push_back(1);
@@ -43,6 +44,7 @@ int main()
 
     // LinkedList Test
     {
+        std::cout << "==============LinkedList Test==============" << std::endl;
         LinkedList linkedlist;
         std::cout << linkedlist.Empty() << std::endl;
 
@@ -93,6 +95,7 @@ int main()
         linkedlist.Clear();
         std::cout << linkedlist.Empty() << " " << linkedlist.Len() << std::endl;
     }
+    std::cout << "==================Test End==================" << std::endl;
 
     return 0;
 }
