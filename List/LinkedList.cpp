@@ -18,6 +18,33 @@ LinkedList::~LinkedList()
     }
 }
 
+LinkedList::LinkedList(LinkedList &&other) noexcept : head(other.head), length(other.length)
+{
+    other.head = nullptr;
+    other.length = 0;
+}
+
+LinkedList &LinkedList::operator=(LinkedList &&other) noexcept
+{
+    if (this != &other)
+    {
+        Node *cur = head;
+        while (cur != nullptr)
+        {
+            Node *next = cur->next;
+            delete cur;
+            cur = next;
+        }
+
+        head = other.head;
+        length = other.length;
+
+        other.head = nullptr;
+        other.length = 0;
+    }
+    return *this;
+}
+
 void LinkedList::Clear()
 {
     Node *current = head->next;

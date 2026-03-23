@@ -20,7 +20,9 @@ public:
     ~LinkedList();
 
     LinkedList(const LinkedList &) = delete;
+    LinkedList(LinkedList &&) noexcept;
     LinkedList &operator=(const LinkedList &) = delete;
+    LinkedList &operator=(LinkedList &&) noexcept;
 
     void Clear() override;
     bool Empty() const override;

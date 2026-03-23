@@ -10,14 +10,16 @@ private:
     int capacity;
     int length;
     void Resize();
+    // noexcept是承诺不抛出异常
 
 public:
     SeqList(int cap = 10);
     ~SeqList();
 
     SeqList(const SeqList &) = delete;
+    SeqList(SeqList &&) noexcept;
     SeqList &operator=(const SeqList &) = delete;
-    // 单纯禁止拷贝，目前懒得写拷贝的事了
+    SeqList &operator=(SeqList &&) noexcept;
 
     void Clear() override;
     bool Empty() const override;

@@ -12,6 +12,28 @@ SeqList::~SeqList()
     delete[] data;
 }
 
+SeqList::SeqList(SeqList &&other) noexcept : data(other.data), capacity(other.capacity), length(other.length)
+{
+    other.data = nullptr;
+    other.capacity = 0;
+    other.length = 0;
+}
+
+SeqList &SeqList::operator=(SeqList &&other) noexcept
+{
+    if (this != &other)
+    {
+        delete[] data;
+        data = other.data;
+        capacity = other.capacity;
+        length = other.length;
+        other.data = nullptr;
+        other.capacity = 0;
+        other.length = 0;
+    }
+    return *this;
+}
+
 void SeqList::Clear()
 {
     length = 0;
