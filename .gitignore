@@ -1,1 +1,4 @@
 .vscode/
+*.obj
+*.exe
+vc140.pdb

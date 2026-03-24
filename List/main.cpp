@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "SeqList.h"
 #include "LinkedList.h"
 
