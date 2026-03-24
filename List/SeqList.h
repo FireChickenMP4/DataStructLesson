@@ -10,15 +10,16 @@ private:
     int capacity;
     int length;
     void Resize();
+    void Swap(SeqList &other) noexcept;
     // noexcept是承诺不抛出异常
 
 public:
     SeqList(int cap = 10);
     ~SeqList();
 
-    SeqList(const SeqList &) = delete;
+    SeqList(const SeqList &);
     SeqList(SeqList &&) noexcept;
-    SeqList &operator=(const SeqList &) = delete;
+    SeqList &operator=(const SeqList &);
     SeqList &operator=(SeqList &&) noexcept;
 
     void Clear() override;

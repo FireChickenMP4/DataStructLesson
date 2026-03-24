@@ -14,14 +14,15 @@ private:
     };
     Node *head;
     int length;
+    void LinkedList::Swap(LinkedList &) noexcept;
 
 public:
     LinkedList();
     ~LinkedList();
 
-    LinkedList(const LinkedList &) = delete;
+    LinkedList(const LinkedList &);
     LinkedList(LinkedList &&) noexcept;
-    LinkedList &operator=(const LinkedList &) = delete;
+    LinkedList &operator=(const LinkedList &);
     LinkedList &operator=(LinkedList &&) noexcept;
 
     void Clear() override;
@@ -61,6 +62,7 @@ public:
         bool operator!=(const Iterator &other) const { return ptr != other.ptr; }
     };
 
+    // 这里不能直接解引用，head可能是nullptr
     Iterator begin() { return Iterator(head->next); }
     Iterator end() { return Iterator(nullptr); }
 
@@ -89,6 +91,9 @@ public:
         bool operator!=(const ConstIterator &other) const { return ptr != other.ptr; }
     };
 
+    // 这里不能直接解引用，head可能是nullptr
+    // 但我决定移动不产生nullptr了，所以就无所谓了
+    // 如果想保险点可以 head == nullptr ? nullptr : head->next
     ConstIterator begin() const { return ConstIterator(head->next); }
     ConstIterator end() const { return ConstIterator(nullptr); }
 };

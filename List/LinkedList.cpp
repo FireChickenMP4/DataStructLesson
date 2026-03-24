@@ -18,10 +18,43 @@ LinkedList::~LinkedList()
     }
 }
 
+LinkedList::LinkedList(const LinkedList &other)
+{
+    head = new Node();
+    length = 0;
+
+    Node *tail = head;
+    Node *cur = other.head->next;
+    while (cur != nullptr)
+    {
+        tail->next = new Node(cur->data);
+        tail = tail->next;
+        cur = cur->next;
+        ++length;
+    }
+}
+
 LinkedList::LinkedList(LinkedList &&other) noexcept : head(other.head), length(other.length)
 {
-    other.head = nullptr;
+    // 牺牲一些性能换接口统一性了
+    other.head = new Node();
     other.length = 0;
+}
+
+LinkedList &LinkedList::operator=(const LinkedList &other)
+{
+    if (this != &other)
+    {
+        LinkedList temp(other);
+        Swap(temp);
+    }
+    return *this;
+}
+
+void LinkedList::Swap(LinkedList &other) noexcept
+{
+    std::swap(head, other.head);
+    std::swap(length, other.length);
 }
 
 LinkedList &LinkedList::operator=(LinkedList &&other) noexcept
@@ -193,12 +226,11 @@ bool LinkedList::Delete(int i, int &e)
     --length;
     return true;
 }
-
 void LinkedList::Traverse() const
 {
-    for (auto num : *this)
+    for (auto it = begin(); it != end(); ++it)
     {
-        std::cout << num << " ";
+        std::cout << *it << " ";
     }
     std::cout << std::endl;
 }

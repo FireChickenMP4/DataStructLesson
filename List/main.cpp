@@ -90,14 +90,29 @@ int main()
         }
         std::cout << std::endl;
 
-        // 复制和赋值
+        // 复制和赋值 拷贝和移动
         SeqList origin(5);
         origin.Push_back(10);
         origin.Push_back(30);
         origin.Push_back(20);
         origin.Traverse();
+        origin.Push_back(50);
+        SeqList copy1(origin);
+        origin.Traverse();
+        copy1.Traverse();
+        SeqList copy2 = origin;
+        origin.Push_back(40);
+        origin.Traverse();
+        copy2.Traverse();
 
-        SeqList copy(std::move(origin));
+        SeqList move1(std::move(origin));
+        origin.Traverse();
+        // 因为被移走origin置空，只会输出空行
+        move1.Traverse();
+        move1.Push_back(60);
+        SeqList move2 = std::move(move1);
+        move1.Traverse();
+        move2.Traverse();
     }
 
     // LinkedList Test
@@ -152,6 +167,30 @@ int main()
 
         linkedlist.Clear();
         std::cout << linkedlist.Empty() << " " << linkedlist.Len() << std::endl;
+
+        // 复制和赋值 拷贝和移动
+        LinkedList origin;
+        origin.Push_back(10);
+        origin.Push_back(30);
+        origin.Push_back(20);
+        origin.Traverse();
+        origin.Push_back(50);
+        LinkedList copy1(origin);
+        origin.Traverse();
+        copy1.Traverse();
+        LinkedList copy2 = origin;
+        origin.Push_back(40);
+        origin.Traverse();
+        copy2.Traverse();
+
+        LinkedList move1(std::move(origin));
+        origin.Traverse();
+        // 因为被移走origin置空，只会输出空行
+        move1.Traverse();
+        move1.Push_back(60);
+        LinkedList move2 = std::move(move1);
+        move1.Traverse();
+        move2.Traverse();
     }
     std::cout << "==================Test End==================" << std::endl;
 

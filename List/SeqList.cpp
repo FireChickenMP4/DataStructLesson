@@ -4,7 +4,7 @@
 
 SeqList::SeqList(int cap) : data(nullptr), capacity(cap > 0 ? cap : 10), length(0)
 {
-    data = new int[capacity];
+    data = new int[static_cast<size_t>(capacity)];
 }
 
 SeqList::~SeqList()
@@ -12,11 +12,43 @@ SeqList::~SeqList()
     delete[] data;
 }
 
+SeqList::SeqList(const SeqList &other) : capacity(other.capacity), length(other.length)
+{
+    data = new int[static_cast<size_t>(capacity)];
+    for (int i = 0; i < length; ++i)
+    {
+        data[i] = other.data[i];
+    }
+}
+
 SeqList::SeqList(SeqList &&other) noexcept : data(other.data), capacity(other.capacity), length(other.length)
 {
     other.data = nullptr;
     other.capacity = 0;
     other.length = 0;
+    // 这里被移动走的要 “置空”
+    // 也就是处于 “有效但未指定” 的状态
+    // 这样调用其他的方法可能比较安全
+    // 另外也能正常调用析构函数
+}
+
+SeqList &SeqList::operator=(const SeqList &other)
+{
+    if (this != &other)
+    {
+        SeqList temp(other);
+        // 这里移动也可以，但是拷贝交换更安全
+        // 以及说性能上可能也还更好
+        Swap(temp);
+    }
+    return *this;
+}
+
+void SeqList::Swap(SeqList &other) noexcept
+{
+    std::swap(data, other.data);
+    std::swap(capacity, other.capacity);
+    std::swap(length, other.length);
 }
 
 SeqList &SeqList::operator=(SeqList &&other) noexcept
@@ -59,7 +91,7 @@ int SeqList::Cap() const
 void SeqList::Resize()
 {
     int newCap = (capacity == 0) ? 1 : capacity * 2;
-    int *newData = new int[newCap];
+    int *newData = new int[static_cast<size_t>(newCap)];
     memmove(newData, data, length * sizeof(int));
     delete[] data;
     data = newData;
