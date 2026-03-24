@@ -5,50 +5,83 @@
 
 void UnionAB(const List &A, const List &B, List &out)
 {
-    // 思路：
-    // 1) 先清空 out。
-    // 2) 遍历 A，把不在 out 里的元素插入 out。
-    // 3) 再遍历 B，把不在 out 里的元素插入 out。
-    // 4) 判重可用 LocateElem，插入可用 Insert(out.Len(), e)。
-    // TODO: 在这里实现 A并B 逻辑
+    out.Clear();
+    // out = A;
+    // 不能这么写，跨类就会出问题
+    // 类内确实可以赋值
+    // emm，我回头或许可以实现一下相互的转化从而可以跨类赋值？
+    // 有必要吗？
+    for (int i = 0; i < A.Len(); ++i)
+    {
+        int e;
+        A.GetElem(i, e);
+        out.Insert(out.Len(), e);
+    }
+    for (int i = 0; i < B.Len(); ++i)
+    {
+        int e;
+        B.GetElem(i, e);
+        if (out.LocateElem(e) == -1)
+        {
+            out.Insert(out.Len(), e);
+        }
+    }
 }
 
 void IntersectAB(const List &A, const List &B, List &out)
 {
-    // 思路：
-    // 1) 先清空 out。
-    // 2) 遍历 A，若元素也在 B 中出现，则考虑加入 out。
-    // 3) 为避免重复加入，可先检查该元素是否已在 out 中。
-    // 4) 成员检测可用 LocateElem。
-    // TODO: 在这里实现 A交B 逻辑
+    out.Clear();
+    for (int i = 0; i < A.Len(); ++i)
+    {
+        int e;
+        A.GetElem(i, e);
+        if (B.LocateElem(e) != -1)
+        {
+            out.Insert(out.Len(), e);
+        }
+    }
 }
 
 void SymmetricDifferenceAB(const List &A, const List &B, List &out)
 {
-    // 思路：
-    // 1) 对每个 A 中元素：若不在 B 中，则加入 out。
-    // 2) 对每个 B 中元素：若不在 A 中，则加入 out。
-    // 3) 也可先分别求 A-B 与 B-A，再合并。
-    // 4) 注意 out 内部去重。
-    // TODO: 在这里实现 A异或B 逻辑
+    out.Clear();
+    for (int i = 0; i < A.Len(); ++i)
+    {
+        int e;
+        A.GetElem(i, e);
+        if (B.LocateElem(e) == -1)
+        {
+            out.Insert(out.Len(), e);
+        }
+    }
+    for (int i = 0; i < B.Len(); ++i)
+    {
+        int e;
+        B.GetElem(i, e);
+        if (A.LocateElem(e) == -1)
+        {
+            out.Insert(out.Len(), e);
+        }
+    }
 }
 
 void DifferenceAB(const List &A, const List &B, List &out)
 {
-    // 思路：
-    // 1) 先清空 out。
-    // 2) 遍历 A，把“不在 B 中”的元素加入 out。
-    // 3) 这就是 A-B。
-    // TODO: 在这里实现 A-B 逻辑
+    out.Clear();
+    for (int i = 0; i < A.Len(); ++i)
+    {
+        int e;
+        A.GetElem(i, e);
+        if (B.LocateElem(e) == -1)
+        {
+            out.Insert(out.Len(), e);
+        }
+    }
 }
 
 void DifferenceBA(const List &A, const List &B, List &out)
 {
-    // 思路：
-    // 1) 先清空 out。
-    // 2) 遍历 B，把“不在 A 中”的元素加入 out。
-    // 3) 这就是 B-A。
-    // TODO: 在这里实现 B-A 逻辑
+    DifferenceAB(B, A, out);
 }
 
 int main()
@@ -193,9 +226,58 @@ int main()
         move1.Traverse();
         move2.Traverse();
     }
-    std::cout << "==================Test End==================" << std::endl;
 
     // 对于集合A和集合B，用基本操作求A并B，A交B，A异或B，以及A-B，B-A
+    // 我们默认认为A和B是集合，也就是自身无重复元素
+    // ABTest
+    {
+        std::cout << "================ABSet Test================" << std::endl;
+        SeqList seq1, seq2, out1;
+        LinkedList link1, link2, out2;
+        // 1,5,7,3,8
+        // 10,0,-1,2,5,8
+        seq1.Push_back(1);
+        seq1.Push_back(5);
+        seq1.Push_back(7);
+        seq1.Push_back(3);
+        seq1.Push_back(8);
+        link1.Push_back(1);
+        link1.Push_back(5);
+        link1.Push_back(7);
+        link1.Push_back(3);
+        link1.Push_back(8);
+        seq2.Push_back(10);
+        seq2.Push_back(0);
+        seq2.Push_back(-1);
+        seq2.Push_back(2);
+        seq2.Push_back(5);
+        seq2.Push_back(8);
+        link2.Push_back(10);
+        link2.Push_back(0);
+        link2.Push_back(-1);
+        link2.Push_back(2);
+        link2.Push_back(5);
+        link2.Push_back(8);
+        UnionAB(seq1, link2, out1);
+        UnionAB(link1, seq2, out2);
+        // 1,5,7,3,8,10,0,-1,2
+        out1.Traverse();
+        out2.Traverse();
+        IntersectAB(seq1, seq2, out2);
+        // 5,8
+        out2.Traverse();
+        SymmetricDifferenceAB(link1, link2, out1);
+        // 1,7,3,10,0,-1,2
+        out1.Traverse();
+        DifferenceAB(seq1, link2, out2);
+        // 1,7,3
+        out2.Traverse();
+        DifferenceBA(link1, seq2, out1);
+        // 10,0,-1,2
+        out1.Traverse();
+    }
+
+    std::cout << "==================Test End==================" << std::endl;
 
     return 0;
 }
