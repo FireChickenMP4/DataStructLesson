@@ -151,7 +151,7 @@ int main()
 
     // LinkedList Test
     {
-        std::cout << "==============LinkedList Test==============" << std::endl;
+        std::cout << "==============LinkedList Test=============" << std::endl;
         LinkedList linkedlist;
         std::cout << linkedlist.Empty() << std::endl;
 
@@ -277,7 +277,7 @@ int main()
         out1.Traverse();
     }
 
-    std::cout << "==================Test End==================" << std::endl;
+    std::cout << "=================Test End=================" << std::endl;
 
     return 0;
 }
