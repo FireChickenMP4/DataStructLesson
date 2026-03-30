@@ -84,7 +84,81 @@ void DifferenceBA(const List &A, const List &B, List &out)
     DifferenceAB(B, A, out);
 }
 
+void Test();
+
 int main()
+{
+    // Test();
+    SeqList seqA, seqB, seqout;
+    LinkedList linkedA, linkedB, linkedout;
+
+    // push_back
+    // {
+    //     seqA.Push_back(1);
+    //     seqA.Push_back(2);
+    //     seqA.Push_back(3);
+    //     seqA.Push_back(4);
+
+    //     linkedA.Push_back(1);
+    //     linkedA.Push_back(2);
+    //     linkedA.Push_back(3);
+    //     linkedA.Push_back(4);
+
+    //     seqB.Push_back(2);
+    //     seqB.Push_back(3);
+    //     seqB.Push_back(5);
+    //     seqB.Push_back(6);
+    //     seqB.Push_back(7);
+
+    //     linkedB.Push_back(2);
+    //     linkedB.Push_back(3);
+    //     linkedB.Push_back(5);
+    //     linkedB.Push_back(6);
+    //     linkedB.Push_back(7);
+    // }
+
+    // stdin
+    {
+        char inputA[100];
+        std::cin.getline(inputA, 100);
+        for (int i = 0; inputA[i] != '\0'; ++i)
+        {
+            if (inputA[i] >= '0' && inputA[i] <= '9')
+            {
+                int num = static_cast<int>((inputA[i] - '0'));
+                seqA.Push_back(num);
+                linkedA.Push_back(num);
+            }
+        }
+        char inputB[100];
+        std::cin.getline(inputB, 100);
+        for (int i = 0; inputB[i] != '\0'; ++i)
+        {
+            if (inputB[i] >= '0' && inputB[i] <= '9')
+            {
+                int num = static_cast<int>((inputB[i] - '0'));
+                seqB.Push_back(num);
+                linkedB.Push_back(num);
+            }
+        }
+    }
+
+    // A并B
+    UnionAB(seqA, seqB, seqout);
+    seqout.Traverse();
+    // A交B
+    IntersectAB(linkedA, seqB, linkedout);
+    linkedout.Traverse();
+    // A异或B
+    SymmetricDifferenceAB(seqA, linkedB, seqout);
+    seqout.Traverse();
+    // A-B
+    DifferenceAB(linkedA, linkedB, linkedout);
+    linkedout.Traverse();
+    return 0;
+}
+
+void Test()
 {
     // SeqList Test
     {
@@ -278,6 +352,4 @@ int main()
     }
 
     std::cout << "=================Test End=================" << std::endl;
-
-    return 0;
 }
