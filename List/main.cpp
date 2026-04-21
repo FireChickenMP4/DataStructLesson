@@ -1,7 +1,16 @@
 #include <iostream>
+#include <utility>
 #include <vector>
 #include "SeqList.h"
 #include "LinkedList.h"
+
+template <typename T>
+void PrintList(const ListT<T> &list, const std::function<void(const T &)> &printer = [](const T &value)
+                                     { std::cout << value << " "; })
+{
+    list.ForEach(printer);
+    std::cout << std::endl;
+}
 
 void UnionAB(const List &A, const List &B, List &out)
 {
@@ -84,6 +93,7 @@ void DifferenceBA(const List &A, const List &B, List &out)
     DifferenceAB(B, A, out);
 }
 
+void DemoCustomPrinter();
 void Test();
 
 int main()
@@ -92,7 +102,7 @@ int main()
     SeqList seqA, seqB, seqout;
     LinkedList linkedA, linkedB, linkedout;
 
-    // push_back
+    // // push_back
     // {
     //     seqA.Push_back(1);
     //     seqA.Push_back(2);
@@ -119,43 +129,61 @@ int main()
 
     // stdin
     {
-        char inputA[100];
-        std::cin.getline(inputA, 100);
-        for (int i = 0; inputA[i] != '\0'; ++i)
+        int x, y;
+        std::cout << "请输入n和数组A\n";
+        std::cin >> x;
+        for (int i = 0; i < x; ++i)
         {
-            if (inputA[i] >= '0' && inputA[i] <= '9')
-            {
-                int num = static_cast<int>((inputA[i] - '0'));
-                seqA.Push_back(num);
-                linkedA.Push_back(num);
-            }
+            int temp;
+            std::cin >> temp;
+            seqA.Push_back(temp);
+            linkedA.Push_back(temp);
         }
-        char inputB[100];
-        std::cin.getline(inputB, 100);
-        for (int i = 0; inputB[i] != '\0'; ++i)
+        std::cout << "请输入n和数组B\n";
+        std::cin >> y;
+        for (int i = 0; i < y; ++i)
         {
-            if (inputB[i] >= '0' && inputB[i] <= '9')
-            {
-                int num = static_cast<int>((inputB[i] - '0'));
-                seqB.Push_back(num);
-                linkedB.Push_back(num);
-            }
+            int temp;
+            std::cin >> temp;
+            seqB.Push_back(temp);
+            linkedB.Push_back(temp);
         }
     }
 
     // A并B
+    std::cout << "A并B\n";
     UnionAB(seqA, seqB, seqout);
-    seqout.Traverse();
+    PrintList(seqout);
     // A交B
+    std::cout << "A交B\n";
     IntersectAB(linkedA, seqB, linkedout);
-    linkedout.Traverse();
+    PrintList(linkedout);
     // A异或B
-    SymmetricDifferenceAB(seqA, linkedB, seqout);
-    seqout.Traverse();
+    // SymmetricDifferenceAB(seqA, linkedB, seqout);
+    // PrintList(seqout);
     // A-B
+    std::cout << "A-B\n";
     DifferenceAB(linkedA, linkedB, linkedout);
-    linkedout.Traverse();
+    PrintList(linkedout);
+    // B-A
+    std::cout << "B-A\n";
+    DifferenceBA(seqA, linkedB, seqout);
+    PrintList(seqout);
+
     return 0;
+}
+
+void DemoCustomPrinter()
+{
+    std::cout << "============Custom Printer Demo===========\n";
+
+    SeqListT<std::pair<int, int>> pairList;
+    pairList.Push_back({1, 2});
+    pairList.Push_back({3, 4});
+    pairList.Push_back({5, 8});
+
+    PrintList<std::pair<int, int>>(pairList, [](const std::pair<int, int> &item)
+                                   { std::cout << "(" << item.first << ", " << item.second << ") "; });
 }
 
 void Test()
@@ -170,13 +198,13 @@ void Test()
         seqlist.Push_back(3);
         seqlist.Push_back(2);
         std::cout << seqlist.Len() << std::endl;
-        seqlist.Traverse();
+        PrintList(seqlist);
         seqlist.Clear();
         seqlist.Push_back(1);
         seqlist.Push_back(3);
         seqlist.Push_back(3);
         seqlist.Push_back(2);
-        seqlist.Traverse();
+        PrintList(seqlist);
         std::cout << seqlist.LocateElem(3) << " " << seqlist.LocateElem(9) << std::endl;
         int num1 = -1, num2 = -1;
         std::cout << seqlist.PriorElem(3, num1) << " " << seqlist.PriorElem(9, num2) << std::endl;
@@ -184,10 +212,10 @@ void Test()
         std::cout << seqlist.NextElem(3, num1) << " " << seqlist.NextElem(9, num2) << std::endl;
         std::cout << num1 << " " << num2 << std::endl;
         seqlist.Insert(2, 9);
-        seqlist.Traverse();
+        PrintList(seqlist);
         int num3 = -1;
         seqlist.Delete(3, num3);
-        seqlist.Traverse();
+        PrintList(seqlist);
         std::cout << num3 << std::endl;
         std::cout << seqlist.Len() << " " << seqlist.Cap() << std::endl;
         // seqlist.Resize(); // 实际上应该private的方法
@@ -203,24 +231,24 @@ void Test()
         origin.Push_back(10);
         origin.Push_back(30);
         origin.Push_back(20);
-        origin.Traverse();
+        PrintList(origin);
         origin.Push_back(50);
         SeqList copy1(origin);
-        origin.Traverse();
-        copy1.Traverse();
+        PrintList(origin);
+        PrintList(copy1);
         SeqList copy2 = origin;
         origin.Push_back(40);
-        origin.Traverse();
-        copy2.Traverse();
+        PrintList(origin);
+        PrintList(copy2);
 
         SeqList move1(std::move(origin));
-        origin.Traverse();
+        PrintList(origin);
         // 因为被移走origin置空，只会输出空行
-        move1.Traverse();
+        PrintList(move1);
         move1.Push_back(60);
         SeqList move2 = std::move(move1);
-        move1.Traverse();
-        move2.Traverse();
+        PrintList(move1);
+        PrintList(move2);
     }
 
     // LinkedList Test
@@ -240,7 +268,7 @@ void Test()
         linkedlist.Insert(2, 2);
         std::cout << linkedlist.Empty() << std::endl;
         std::cout << linkedlist.Len() << std::endl;
-        linkedlist.Traverse();
+        PrintList(linkedlist);
 
         std::cout << linkedlist.LocateElem(3) << " " << linkedlist.LocateElem(9) << std::endl;
 
@@ -251,11 +279,11 @@ void Test()
         std::cout << nxt << std::endl;
 
         linkedlist.Insert(2, 9);
-        linkedlist.Traverse();
+        PrintList(linkedlist);
 
         int del = -1;
         linkedlist.Delete(3, del);
-        linkedlist.Traverse();
+        PrintList(linkedlist);
         std::cout << del << std::endl;
 
         int elem = -1;
@@ -264,9 +292,9 @@ void Test()
 
         linkedlist.Push_back(7);
         linkedlist.Push_back(8);
-        linkedlist.Traverse();
+        PrintList(linkedlist);
         std::cout << linkedlist.Insert(100, 10) << std::endl;
-        linkedlist.Traverse();
+        PrintList(linkedlist);
         std::cout << linkedlist.Delete(100, edgeDel) << std::endl;
 
         int edgePre = -1, edgeNext = -1;
@@ -281,24 +309,24 @@ void Test()
         origin.Push_back(10);
         origin.Push_back(30);
         origin.Push_back(20);
-        origin.Traverse();
+        PrintList(origin);
         origin.Push_back(50);
         LinkedList copy1(origin);
-        origin.Traverse();
-        copy1.Traverse();
+        PrintList(origin);
+        PrintList(copy1);
         LinkedList copy2 = origin;
         origin.Push_back(40);
-        origin.Traverse();
-        copy2.Traverse();
+        PrintList(origin);
+        PrintList(copy2);
 
         LinkedList move1(std::move(origin));
-        origin.Traverse();
+        PrintList(origin);
         // 因为被移走origin置空，只会输出空行
-        move1.Traverse();
+        PrintList(move1);
         move1.Push_back(60);
         LinkedList move2 = std::move(move1);
-        move1.Traverse();
-        move2.Traverse();
+        PrintList(move1);
+        PrintList(move2);
     }
 
     // 对于集合A和集合B，用基本操作求A并B，A交B，A异或B，以及A-B，B-A
@@ -335,21 +363,23 @@ void Test()
         UnionAB(seq1, link2, out1);
         UnionAB(link1, seq2, out2);
         // 1,5,7,3,8,10,0,-1,2
-        out1.Traverse();
-        out2.Traverse();
+        PrintList(out1);
+        PrintList(out2);
         IntersectAB(seq1, seq2, out2);
         // 5,8
-        out2.Traverse();
+        PrintList(out2);
         SymmetricDifferenceAB(link1, link2, out1);
         // 1,7,3,10,0,-1,2
-        out1.Traverse();
+        PrintList(out1);
         DifferenceAB(seq1, link2, out2);
         // 1,7,3
-        out2.Traverse();
+        PrintList(out2);
         DifferenceBA(link1, seq2, out1);
         // 10,0,-1,2
-        out1.Traverse();
+        PrintList(out1);
     }
+
+    DemoCustomPrinter();
 
     std::cout << "=================Test End=================" << std::endl;
 }
