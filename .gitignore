@@ -1,6 +1,8 @@
 .vscode/
 *.obj
 *.exe
-vc140.pdb
+*.pdb
+*.ilk
 exp-3/
 exp-4/
+exp-5/

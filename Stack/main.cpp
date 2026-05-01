@@ -9,39 +9,6 @@ void PrintStack(const StackT<T> &stack, const std::function<void(const T &)> &pr
     std::cout << std::endl;
 }
 
-struct Trace
-{
-    int id;
-    static int counter;
-    bool operator==(const Trace &) const = default;
-    Trace() : id(++counter) { std::cout << "Trace #" << id << " default\n"; }
-    Trace(const Trace &other) : id(++counter) { std::cout << "Trace #" << id << " copy from #" << other.id << "\n"; }
-    Trace(Trace &&other) noexcept : id(other.id)
-    {
-        std::cout << "Trace #" << id << " move from #" << other.id << "\n";
-        other.id = -1;
-    }
-    ~Trace()
-    {
-        if (id != -1)
-            std::cout << "Trace #" << id << " destruct\n";
-    }
-    Trace &operator=(const Trace &other)
-    {
-        std::cout << "Trace #" << id << " copy assign from #" << other.id << "\n";
-        id = other.id;
-        return *this;
-    }
-    Trace &operator=(Trace &&other) noexcept
-    {
-        std::cout << "Trace #" << id << " move assign from #" << other.id << "\n";
-        id = other.id;
-        other.id = -1;
-        return *this;
-    }
-};
-int Trace::counter = 0;
-
 void Test();
 
 int main()
@@ -50,7 +17,9 @@ int main()
     // emmm我想想啊
     // 栈其实可以直接用SeqList的弱化版模拟
     // 所以我直接在SeqListT<T>上重载就可以了
-    // Test();
+    Test();
+
+    // 然后专门来写exp-4
 }
 
 void Test()
