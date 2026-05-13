@@ -5,13 +5,17 @@
 #include "SeqList.h"
 
 const int maxn = 250005;
+const char start_char = ' ';
+const int char_size = 95;
+// 32 (space) - 126 ~
+// 这里把空格作为伪广义SAM的分隔符
 
 char s1[maxn], s2[maxn], combined[maxn * 2 + 1];
 int ans, best = -1;
 struct Suffix_Automaton // 只处理小写字母了
 {
     int len[maxn << 2], link[maxn << 2];
-    int ch[maxn << 2][27];
+    int ch[maxn << 2][char_size];
     bool f[maxn << 2][2];
     // f用于标记同时拥有两种标记
     SeqList v[maxn << 2];
@@ -31,7 +35,7 @@ struct Suffix_Automaton // 只处理小写字母了
         for (int _ = 0; _ < n; ++_)
         {
             // 创建一个新的状态cur，len(cur)=len(last) + 1
-            int c = str[_] - 'a', p = last, cur = ++siz;
+            int c = str[_] - start_char, p = last, cur = ++siz;
             len[cur] = len[p] + 1;
             f[cur][op] = 1;
             // 打字符串来源tag
@@ -63,7 +67,7 @@ struct Suffix_Automaton // 只处理小写字母了
                     len[copy] = len[p] + 1;
                     pos[copy] = pos[q];
                     link[copy] = link[q];
-                    for (int i = 0; i < 27; ++i)
+                    for (int i = 0; i < char_size; ++i)
                         ch[copy][i] = ch[q][i];
                     // 保持出边
                     while (p != -1 && ch[p][c] == q)
@@ -131,9 +135,9 @@ int main()
     std::cin >> s2;
     int len1 = static_cast<int>(std::strlen(s1));
     std::strcpy(combined, s1);
-    combined[len1] = '{';
+    combined[len1] = ' ';
     std::strcpy(combined + len1 + 1, s2);
-    char qwq[1] = {'{'};
+    char qwq[] = " ";
     sam.init();
     sam.extend(s1, 0, 0);
     sam.extend(qwq, 0, len1);
